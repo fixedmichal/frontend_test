@@ -3,7 +3,7 @@
   <main class="app__main">
     <h1 class="app__main__header">Nagłówek H1</h1>
     <div class="app__main__blocks">
-      <app-first-block />
+      <app-first-block class="app__main__blocks__first-block" />
       <app-second-block />
       <app-third-block class="app__main__blocks__third-block">
         @if(projectedContentTexts$ | async; as projectedContentTexts) {
@@ -16,8 +16,10 @@
   <ng-container>
     <dialog #dialog class="dialog">
       <article class="dialog__description">
-        <h4>Uwaga!</h4>
-        <p>Ta treść jest już obecna na stronie!</p>
+        <h4 class="dialog__description__header">Uwaga!</h4>
+        <p class="dialog__description__paragraph">
+          Ta treść jest już obecna na stronie!
+        </p>
       </article>
       <button class="dialog__button button">OK</button>
     </dialog>

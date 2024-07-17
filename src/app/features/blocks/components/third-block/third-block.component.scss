@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .third-block {
   display: flex;
   flex-direction: column;
@@ -10,7 +12,7 @@
 
   &__description {
     padding: 0 0.2rem;
-    color: #989baa;
+    color: $light-grey;
     font-size: 0.9rem;
     text-align: left;
   }

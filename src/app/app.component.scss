@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .app {
   min-height: 100vh;
   display: grid;
@@ -24,30 +26,53 @@
       }
 
       &__third-block {
+        align-self: flex-start;
         margin: 0 auto;
         padding: 0 0.2rem;
-        color: #989baa;
+        color: $light-grey;
         font-size: 0.9rem;
         text-align: left;
       }
     }
   }
 
-    .dialog {
-      border: none;
-      background-color: #e88301;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+  .dialog {
+    border: none;
+    background-color: $orange;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 
-      &__button {
-        padding: 1rem;
+    &__button {
+      padding: 1rem;
+      background-color: $orange;
+      border: 1px solid $dark-grey;
+
+      &:focus,
+      &:focus:hover {
+        outline: 0.3rem solid currentColor;
+        outline-offset: 0.3rem;
+      }
+
+      &:hover {
+        background-color: $dark-grey;
+        color: $orange;
       }
     }
 
-  }
+    &__description {
+      &__header {
+        color: $dark-grey;
+      }
 
+      &__paragraph {
+        color: $dark-grey;
+      }
+    }
+  }
+}
 
 @media (min-width: 648px) and (max-width: 1400px) {
   .app__main__blocks__third-block {

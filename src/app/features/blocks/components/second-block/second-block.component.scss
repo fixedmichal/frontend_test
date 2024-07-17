@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .second-block {
   margin-bottom: 1rem;
   text-align: center;
@@ -8,15 +10,15 @@
 
     &__button {
       padding: 0.8rem 3.5rem;
-      color: #989baa;
-      background-color: #2a2d34;
-      border: 2px solid #989baa;
+      color: $light-grey;
+      background-color: $dark-grey;
+      border: 2px solid $light-grey;
       border-radius: 2%;
       transition: 0.2s ease-in-out;
 
       &:hover {
-        color: #f5f6f8;
-        border-color: #f5f6f8;
+        color: $dirty-white;
+        border-color: $dirty-white;
         background-image: linear-gradient(
           to left,
           #253348,
@@ -25,6 +27,11 @@
           #ee635d,
           #fc9c21
         );
+      }
+
+      &:focus {
+        outline: 0.4rem solid $orange;
+        outline-offset: 0.37rem;
       }
     }
   }

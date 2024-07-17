@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .first-block {
   &__radio-buttons {
     padding: 0;
@@ -17,7 +19,7 @@
 
         width: 2rem;
         height: 2rem;
-        border: 0.35rem solid #f5f6f8;
+        border: 0.35rem solid $dirty-white;
         border-radius: 50%;
 
         transform: translateX(0.005rem);
@@ -29,7 +31,7 @@
           border-radius: 50%;
           transform: scale(0);
           transition: 120ms transform ease-in-out;
-          box-shadow: inset 1rem 1rem #f5f6f8;
+          box-shadow: inset 1rem 1rem $dirty-white;
         }
 
         &:checked::before {
@@ -37,8 +39,8 @@
         }
 
         &:focus {
-          outline: max(3px, 0.15rem) solid currentColor;
-          outline-offset: max(3px, 0.15rem);
+          outline: 0.4rem solid $orange;
+          outline-offset: 0.5rem;
         }
       }
     }

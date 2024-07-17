@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 .footer {
   position: relative;
   bottom: 0;
@@ -8,7 +10,7 @@
   justify-content: space-between;
   margin-top: 4rem;
   padding: 1rem 1rem;
-  background-color: #15161a;
+  background-color: $black;
 
   &__logo {
     height: 5.6rem;
@@ -16,22 +18,23 @@
     font-size: 1.25rem;
     padding-left: 0.4rem;
     text-transform: uppercase;
-    border: 1px solid #303030;
-    color: #2a2d36;
+    border: 1px solid $dark-grey;
+
+    color: $dark-grey;
     transition: all 0.2s ease-in-out;
 
     &:hover {
       color: #fff;
-      border-color: #e88201;
+      border-color: $orange;
     }
 
     &__is-word {
-      color: #2a2d36;
+      color: $dark-grey;
     }
   }
 
   &__company-name {
-    color: #2a2d36;
+    color: $dark-grey;
     position: relative;
     font-size: 1.1rem;
     transition: 0.3s ease-in-out;
@@ -44,7 +47,7 @@
       content: "";
       position: absolute;
       display: inline-block;
-      border-top: 0.5px solid #2a2d36;
+      border-top: 0.5px solid $dark-grey;
       width: 2.5rem;
       transform: translateY(-0.25rem);
       top: 65%;
@@ -55,7 +58,7 @@
       content: "";
       position: absolute;
       display: inline-block;
-      border-top: 0.5px solid #2a2d36;
+      border-top: 0.5px solid $dark-grey;
       width: 2.5rem;
       transform: translateY(-0.25rem);
       top: 65%;
@@ -70,10 +73,15 @@
       font-size: 1.1rem;
       display: flex;
       align-items: center;
-      color: #989baa;
+      color: $light-grey;
       background-color: inherit;
-      border: 1px solid #282b32;
+      border: 1px solid $dark-grey;
       padding: 0.7rem 3.5rem;
+
+      &:focus {
+        outline: 0.4rem solid $orange;
+        outline-offset: 0.45rem;
+      }
 
       &__icon {
         margin-left: 0.7rem;
@@ -81,17 +89,8 @@
       }
 
       &:hover {
-        color: #fff;
-        border-color: #fff;
-      }
-
-      // to delete
-      &:hover + .footer__navigation__menu {
-        display: block;
-      }
-
-      &:focus + .footer__navigation__menu {
-        display: block;
+        color: $dirty-white;
+        border-color: $dirty-white;
       }
     }
 
@@ -101,8 +100,8 @@
       left: 0;
       z-index: -1;
       width: 100%;
-      background: #ffffff;
-      color: #15161a;
+      background: $dirty-white;
+      color: $black;
       text-align: center;
       transition: top 0.5s ease;
 
@@ -134,7 +133,7 @@
               font-size: 0.8rem;
               text-transform: uppercase;
 
-              color: #15161a;
+              color: $black;
             }
 
             &:focus {
@@ -144,7 +143,7 @@
 
             &:hover > p,
             &:hover > i {
-              color: #e88201;
+              color: $orange;
             }
           }
         }
