@@ -1,0 +1,24 @@
+<section class="first-block">
+  <h2 class="first-block__header uppercase-header">blok pierwszy</h2>
+  <form [formGroup]="optionsForm">
+    <fieldset
+      class="first-block__radio-buttons"
+      role="radiogroup"
+      aria-labelledby="first-block-label"
+    >
+      @for(radioButton of radioButtonsConfig; track radioButton.id) {
+      <label class="first-block__radio-buttons__label" [for]="radioButton.id">
+        <input
+          formControlName="options"
+          class="first-block__radio-buttons__label__radio-button"
+          type="radio"
+          [id]="radioButton.id"
+          [value]="radioButton.value"
+          aria-labelledby="radioButton.id"
+        />
+        {{ radioButton.text }}</label
+      ><br />
+      }
+    </fieldset>
+  </form>
+</section>

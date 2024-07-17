@@ -1,0 +1,17 @@
+.third-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &__header {
+    text-align: center;
+  }
+
+  &__description {
+    padding: 0 0.2rem;
+    color: #989baa;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+}
