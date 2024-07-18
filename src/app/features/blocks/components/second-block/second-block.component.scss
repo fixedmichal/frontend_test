@@ -29,7 +29,7 @@
         );
       }
 
-      &:focus {
+      &:focus-visible {
         outline: 0.4rem solid $orange;
         outline-offset: 0.37rem;
       }

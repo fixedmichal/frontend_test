@@ -50,8 +50,7 @@
       background-color: $orange;
       border: 1px solid $dark-grey;
 
-      &:focus,
-      &:focus:hover {
+      &:focus-visible {
         outline: 0.3rem solid currentColor;
         outline-offset: 0.3rem;
       }

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HeaderComponent } from './core/components/header/header.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { FirstBlockComponent } from './features/blocks/components/first-block/first-block.component';
@@ -30,9 +25,13 @@ import { AsyncPipe } from '@angular/common';
 export class AppComponent implements OnInit {
   constructor(private blocksService: BlocksService) {}
 
-  projectedContentTexts$ = this.blocksService.outputTexts$;
+  protected projectedContentTexts$ = this.blocksService.outputTexts$;
 
   ngOnInit(): void {
+    this.setupDialog();
+  }
+
+  private setupDialog(): void {
     const dialog = document.querySelector('dialog');
 
     if (dialog) {

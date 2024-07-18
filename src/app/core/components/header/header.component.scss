@@ -27,7 +27,7 @@
     cursor: pointer;
     transition: 0.2s ease-in-out;
 
-    &:focus {
+    &:focus-visible {
       outline: 0.4rem solid $orange;
       outline-offset: 0.5rem;
     }

@@ -78,7 +78,7 @@
       border: 1px solid $dark-grey;
       padding: 0.7rem 3.5rem;
 
-      &:focus {
+      &:focus-visible {
         outline: 0.4rem solid $orange;
         outline-offset: 0.45rem;
       }
@@ -136,13 +136,13 @@
               color: $black;
             }
 
-            &:focus {
+            &:focus-visible {
               outline: max(3px, 0.15rem) solid currentColor;
               outline-offset: max(3px, 0.15rem);
             }
 
-            &:hover > p,
-            &:hover > i {
+            &:hover > &__text,
+            &:hover > &__icon {
               color: $orange;
             }
           }

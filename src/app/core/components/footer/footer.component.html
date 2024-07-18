@@ -11,15 +11,18 @@
       class="button footer__navigation__button"
       (click)="onDisplayMenuClick()"
     >
-      Pokaż @if(!isMenuDisplayed) {
-      <i
-        class="button footer__navigation__button__icon fa-solid fa-chevron-up"
-      ></i>
-      } @else {
-      <i
-        class="button footer__navigation__button__icon fa-solid fa-chevron-down"
-      ></i>
-      }
+      <span>Pokaż</span>
+      <ng-container>
+        @if(!isMenuDisplayed) {
+        <i
+          class="button footer__navigation__button__icon fa-solid fa-chevron-up"
+        ></i>
+        } @else {
+        <i
+          class="button footer__navigation__button__icon fa-solid fa-chevron-down"
+        ></i>
+        }</ng-container
+      >
     </button>
     <div
       class="footer__navigation__menu"
