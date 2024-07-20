@@ -54,6 +54,11 @@ export class FirstBlockComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.setupOptionSelectedEmittingStream();
+    this.setupResettingRadioButtonsStream();
+  }
+
+  private setupOptionSelectedEmittingStream(): void {
     this.optionsForm.valueChanges
       .pipe(
         tap((value) => {
@@ -64,7 +69,9 @@ export class FirstBlockComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
+  }
 
+  private setupResettingRadioButtonsStream(): void {
     this.blocksService.resetRadioButtons$
       .pipe(
         tap(() => this.optionsForm.reset()),
