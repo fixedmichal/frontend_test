@@ -16,4 +16,9 @@
       doklej
     </button>
   </div>
+  @if(isButtonClickedButNoOptionSelectedWarningDisplayed$ | async) {
+  <span id="noOptionSelectedWarning" class="second-block__warning"
+    >No option is selected!</span
+  >
+  }
 </section>

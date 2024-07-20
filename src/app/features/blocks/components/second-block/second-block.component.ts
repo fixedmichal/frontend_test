@@ -1,22 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { BlocksService } from '../../../../core/services/blocks.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-second-block',
   standalone: true,
-  imports: [],
+  imports: [AsyncPipe],
   templateUrl: './second-block.component.html',
   styleUrl: './second-block.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SecondBlockComponent {
-  private readonly service = inject(BlocksService);
+  private readonly blocksService = inject(BlocksService);
+
+  protected isButtonClickedButNoOptionSelectedWarningDisplayed$ =
+    this.blocksService.buttonClickedButNoOptionSelected$;
 
   onAppendButtonClick(): void {
-    this.service.emitPasteButtonClicked();
+    this.blocksService.emitPasteButtonClicked();
   }
 
   onReplaceButtonClick(): void {
-    this.service.emitReplaceButtonClicked();
+    this.blocksService.emitReplaceButtonClicked();
   }
 }

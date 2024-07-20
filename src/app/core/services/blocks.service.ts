@@ -5,8 +5,8 @@ import {
   first,
   forkJoin,
   map,
+  merge,
   Observable,
-  ReplaySubject,
   Subject,
   switchMap,
   tap,
@@ -27,7 +27,7 @@ export class BlocksService {
     null
   );
 
-  private optionSelected$$ = new ReplaySubject<Option>(1);
+  private optionSelected$$ = new BehaviorSubject<Option | null>(null);
   private replaceButtonClicked$$ = new Subject<void>();
   private pasteButtonClicked$$ = new Subject<void>();
 
@@ -49,6 +49,13 @@ export class BlocksService {
     return this.optionSelected$$
       .asObservable()
       .pipe(filter((optionSelectd) => optionSelectd !== null));
+  }
+
+  get buttonClickedButNoOptionSelected$() {
+    return merge(this.appendButtonClicked$, this.replaceButtonClicked$).pipe(
+      switchMap(() => this.optionSelected$$),
+      map((optionSelected) => optionSelected === null)
+    );
   }
 
   get replaceButtonClicked$(): Observable<void> {
@@ -104,7 +111,7 @@ export class BlocksService {
     this.resetRadioButtons$$.next();
   }
 
-  forwardDialogReference(dialog: HTMLDialogElement): void {
+  setDialogReference(dialog: HTMLDialogElement): void {
     this.htmlDialogElement = dialog;
   }
 
@@ -118,7 +125,7 @@ export class BlocksService {
       ),
       tap(([optionSelected, textRecordsFromJson]) => {
         if (textRecordsFromJson) {
-          this.generateAppendedOutputText(optionSelected, textRecordsFromJson);
+          this.emitAppendedOutputText(optionSelected, textRecordsFromJson);
         }
       })
     );
@@ -134,16 +141,16 @@ export class BlocksService {
       ),
       tap(([optionSelected, textRecordsFromJson]) => {
         if (textRecordsFromJson) {
-          this.generateReplacementText(optionSelected, textRecordsFromJson);
+          this.emitReplacementOutputText(optionSelected, textRecordsFromJson);
         }
       })
     );
   }
 
-  private generateAppendedOutputText(
+  private emitAppendedOutputText(
     optionSelected: Option,
     textRecordsFromJson: TextRecord[]
-  ) {
+  ): void {
     let textToAppend: string | null = null;
     let index: number;
 
@@ -200,7 +207,7 @@ export class BlocksService {
       : this.outputText$$.next(this.outputText$$.value.sort(sortingMethod));
   }
 
-  private generateReplacementText(
+  private emitReplacementOutputText(
     optionSelected: Option,
     textRecordsFromJson: TextRecord[]
   ): void {
