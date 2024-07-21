@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
         dialog.close();
       });
 
-      this.blocksService.forwardDialogReference(dialog);
+      this.blocksService.setDialogReference(dialog);
     }
   }
 }
