@@ -6,6 +6,7 @@ import { SecondBlockComponent } from './features/blocks/components/second-block/
 import { ThirdBlockComponent } from './features/blocks/components/third-block/third-block.component';
 import { BlocksService } from './core/services/blocks.service';
 import { AsyncPipe } from '@angular/common';
+import { RandomColorDirective } from './features/blocks/directives/random-color.directive';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { AsyncPipe } from '@angular/common';
     FirstBlockComponent,
     SecondBlockComponent,
     ThirdBlockComponent,
+    RandomColorDirective,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -32,7 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   private setupDialog(): void {
-    const dialog = document.querySelector('dialog');
+    const dialog = document.querySelector<HTMLDialogElement>('dialog');
 
     if (dialog) {
       const closeDialogButton = dialog.querySelector('.dialog__button');
@@ -41,6 +43,7 @@ export class AppComponent implements OnInit {
         dialog.close();
       });
 
+      this.blocksService.setDialogReference(dialog);
       this.blocksService.setDialogReference(dialog);
     }
   }

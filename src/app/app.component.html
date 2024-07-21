@@ -8,7 +8,8 @@
       <app-third-block class="app__main__blocks__third-block">
         @if(projectedContentTexts$ | async; as projectedContentTexts) {
         @for(text of projectedContentTexts; track text) {
-        <div [innerHTML]="text"></div>
+        <p appRandomColor>{{ text }}</p>
+        <br />
         } }
       </app-third-block>
     </div>
