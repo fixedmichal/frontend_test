@@ -5,12 +5,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { tap } from 'rxjs';
 import { Option } from '../../../../models/option.type';
 import { BlocksService } from '../../../../core/services/blocks.service';
@@ -19,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-first-block',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './first-block.component.html',
   styleUrl: './first-block.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,7 +69,10 @@ export class FirstBlockComponent implements OnInit {
   private setupResettingRadioButtonsStream(): void {
     this.blocksService.resetRadioButtons$
       .pipe(
-        tap(() => this.optionsForm.reset()),
+        tap(() => {
+          this.optionsForm.reset();
+          this.blocksService.emitOptionSelected(null);
+        }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe();
