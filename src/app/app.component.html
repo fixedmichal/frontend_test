@@ -13,16 +13,14 @@
       </app-third-block>
     </div>
   </main>
-  <ng-container>
-    <dialog #dialog class="dialog">
-      <article class="dialog__description">
-        <h4 class="dialog__description__header">Uwaga!</h4>
-        <p class="dialog__description__paragraph">
-          Ta treść jest już obecna na stronie!
-        </p>
-      </article>
-      <button class="dialog__button button">OK</button>
-    </dialog>
-  </ng-container>
+  <dialog #dialog class="dialog" tabindex="-1">
+    <section class="dialog__description">
+      <h4 class="dialog__description__header">Uwaga!</h4>
+      <p class="dialog__description__paragraph">
+        Ta treść jest już obecna na stronie!
+      </p>
+    </section>
+    <button class="dialog__button button" tabindex="-1">OK</button>
+  </dialog>
   <app-footer class="app__footer" />
 </div>

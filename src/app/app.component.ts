@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
       const closeDialogButton = dialog.querySelector('.dialog__button');
 
       closeDialogButton?.addEventListener('click', (e) => {
-        e.preventDefault();
         dialog.close();
       });
 
