@@ -20,8 +20,7 @@ import { sortingMethod } from '../utils/utils';
 
 @Injectable({ providedIn: 'root' })
 export class BlocksService {
-  private readonly MINIMAL_INDEX = 2;
-  private readonly MAXIMAL_INDEX = 5;
+  private readonly TEXT_RECORDS_FROM_JSON_LENGTH = 6;
 
   private textRecordsFromJson$$ = new BehaviorSubject<TextRecord[] | null>(
     null
@@ -173,13 +172,11 @@ export class BlocksService {
 
         break;
       case 'thirdOption':
-        let areThereNoMoreNotDisplayedValues: boolean;
+        const areThereAnyNotDisplayedValues = textRecordsFromJson.find(
+          (textRecord) => textRecord.isDisplayed === false
+        );
 
-        areThereNoMoreNotDisplayedValues = !textRecordsFromJson
-          .slice(2, 6)
-          .find((textRecord) => textRecord.isDisplayed === false);
-
-        if (areThereNoMoreNotDisplayedValues) {
+        if (!areThereAnyNotDisplayedValues) {
           break;
         }
 
@@ -320,9 +317,6 @@ export class BlocksService {
   }
 
   private generateRandomIndexFromRange(): number {
-    return Math.floor(
-      Math.random() * (this.MAXIMAL_INDEX - this.MINIMAL_INDEX + 1) +
-        this.MINIMAL_INDEX
-    );
+    return Math.floor(Math.random() * this.TEXT_RECORDS_FROM_JSON_LENGTH);
   }
 }
