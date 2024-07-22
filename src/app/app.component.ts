@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { HeaderComponent } from './core/components/header/header.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { FirstBlockComponent } from './features/blocks/components/first-block/first-block.component';
@@ -7,6 +7,7 @@ import { ThirdBlockComponent } from './features/blocks/components/third-block/th
 import { BlocksService } from './core/services/blocks.service';
 import { AsyncPipe } from '@angular/common';
 import { RandomColorDirective } from './features/blocks/directives/random-color.directive';
+import { DialogComponent } from './core/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -19,32 +20,14 @@ import { RandomColorDirective } from './features/blocks/directives/random-color.
     SecondBlockComponent,
     ThirdBlockComponent,
     RandomColorDirective,
+    DialogComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
-  constructor(private blocksService: BlocksService) {}
+export class AppComponent {
+  private readonly blocksService = inject(BlocksService);
 
   protected projectedContentTexts$ = this.blocksService.outputTexts$;
-
-  ngOnInit(): void {
-    this.setupDialog();
-  }
-
-  private setupDialog(): void {
-    const dialog = document.querySelector<HTMLDialogElement>('dialog');
-
-    if (dialog) {
-      const closeDialogButton = dialog.querySelector('.dialog__button');
-
-      closeDialogButton?.addEventListener('click', (e) => {
-        dialog.close();
-      });
-
-      this.blocksService.setDialogReference(dialog);
-      this.blocksService.setDialogReference(dialog);
-    }
-  }
 }

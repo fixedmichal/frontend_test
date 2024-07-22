@@ -1,0 +1,40 @@
+@import "variables.scss";
+
+.dialog {
+  border: none;
+  background-color: $orange;
+  margin: auto;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  &[open] {
+    display: flex;
+  }
+
+  &__button {
+    padding: 1rem;
+    background-color: $orange;
+    border: 1px solid $dark-grey;
+
+    &:focus-visible {
+      outline: 0.3rem solid currentColor;
+      outline-offset: 0.3rem;
+    }
+
+    &:hover {
+      background-color: $dark-grey;
+      color: $orange;
+    }
+  }
+
+  &__description {
+    &__header {
+      color: $dark-grey;
+    }
+
+    &__paragraph {
+      color: $dark-grey;
+    }
+  }
+}

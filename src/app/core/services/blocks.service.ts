@@ -27,6 +27,8 @@ export class BlocksService {
     null
   );
 
+  private htmlDialogElement: HTMLDialogElement | undefined;
+
   private optionSelected$$ = new BehaviorSubject<Option | null>(null);
   private replaceButtonClicked$$ = new Subject<void>();
   private pasteButtonClicked$$ = new Subject<void>();
@@ -37,7 +39,6 @@ export class BlocksService {
   private resetRadioButtons$$ = new Subject<void>();
 
   private lastUsedTextIndexForReplacement: number | undefined;
-  private htmlDialogElement: HTMLDialogElement | undefined;
 
   constructor(private http: HttpClient) {
     this.getStringsFromJsonFile().pipe(takeUntilDestroyed()).subscribe();
