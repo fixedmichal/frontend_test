@@ -1,3 +1,4 @@
+import { TextRecord } from './../../models/text-record.type';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
@@ -14,17 +15,17 @@ import {
 import { Option } from '../../models/option.type';
 import { HttpClient } from '@angular/common/http';
 import { loremIpsumText } from '../constants/lorem-ipsum-text.constants';
-import { TextRecord } from '../../models/text-record.type';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { sortingMethod } from '../utils/utils';
+import {
+  generateRandomIndexOfArrayIndexes,
+  sortingStringsMethod,
+} from '../utils/utils';
 
 @Injectable({ providedIn: 'root' })
 export class BlocksService {
-  private readonly TEXT_RECORDS_FROM_JSON_LENGTH = 6;
+  private readonly TEXT_RECORDS_STORAGE_KEY = 'textRecords';
 
-  private textRecordsFromJson$$ = new BehaviorSubject<TextRecord[] | null>(
-    null
-  );
+  private textRecords$$ = new BehaviorSubject<TextRecord[] | null>(null);
 
   private htmlDialogElement: HTMLDialogElement | undefined;
 
@@ -33,14 +34,14 @@ export class BlocksService {
   private pasteButtonClicked$$ = new Subject<void>();
 
   private isPersonalDataDisplayed$$ = new BehaviorSubject<boolean>(false);
-  private outputText$$ = new BehaviorSubject<string[]>([loremIpsumText]);
 
   private resetRadioButtons$$ = new Subject<void>();
 
   private lastUsedTextIndexForReplacement: number | undefined;
 
   constructor(private http: HttpClient) {
-    this.getStringsFromJsonFile().pipe(takeUntilDestroyed()).subscribe();
+    this.emitTextRecordsFromStorageOrFile();
+
     this.setupAppendTextStream$().pipe(takeUntilDestroyed()).subscribe();
     this.setupReplaceTextStream$().pipe(takeUntilDestroyed()).subscribe();
   }
@@ -70,14 +71,21 @@ export class BlocksService {
     return this.isPersonalDataDisplayed$$.asObservable();
   }
 
-  get textRecordsFromJson$() {
-    return this.textRecordsFromJson$$
+  get textRecords$() {
+    return this.textRecords$$
       .asObservable()
       .pipe(filter((textRecordsFromJson) => textRecordsFromJson !== null));
   }
 
   get outputTexts$() {
-    return this.outputText$$.asObservable();
+    return this.textRecords$$.pipe(
+      map((textRecords) =>
+        textRecords
+          ?.filter((textRecord) => !!textRecord.isDisplayed)
+          ?.map((textRecord) => textRecord.value)
+          .sort(sortingStringsMethod)
+      )
+    );
   }
 
   get resetRadioButtons$() {
@@ -96,18 +104,28 @@ export class BlocksService {
     this.pasteButtonClicked$$.next();
   }
 
-  setOutputTextDefaultValue(): void {
-    this.outputText$$.next([loremIpsumText]);
-  }
-
   setIsAuthorNameDisplayedTrue(): void {
     this.isPersonalDataDisplayed$$.next(true);
   }
 
+  resetTextRecordsToDefault(): void {
+    let textRecords = this.textRecords$$?.value?.map((textRecord) => {
+      if (textRecord.value === loremIpsumText) {
+        return { ...textRecord, isDisplayed: true };
+      }
+
+      return { ...textRecord, isDisplayed: false };
+    });
+
+    if (textRecords) {
+      this.textRecords$$.next(textRecords);
+    }
+  }
+
   resetSettingsToDefault(): void {
-    this.setAllTextsFromJsonAsNotDisplayed();
+    this.setAllTextRecordsAsNotDisplayed();
     this.isPersonalDataDisplayed$$.next(false);
-    this.outputText$$.next([loremIpsumText]);
+    this.resetTextRecordsToDefault();
     this.resetRadioButtons$$.next();
   }
 
@@ -120,7 +138,7 @@ export class BlocksService {
       switchMap(() =>
         forkJoin([
           this.optionSelected$.pipe(first()),
-          this.textRecordsFromJson$.pipe(first()),
+          this.textRecords$.pipe(first()),
         ])
       ),
       tap(([optionSelected, textRecordsFromJson]) => {
@@ -136,7 +154,7 @@ export class BlocksService {
       switchMap(() =>
         forkJoin([
           this.optionSelected$.pipe(first()),
-          this.textRecordsFromJson$.pipe(first()),
+          this.textRecords$.pipe(first()),
         ])
       ),
       tap(([optionSelected, textRecordsFromJson]) => {
@@ -172,16 +190,24 @@ export class BlocksService {
 
         break;
       case 'thirdOption':
-        const areThereAnyNotDisplayedValues = textRecordsFromJson.find(
-          (textRecord) => textRecord.isDisplayed === false
-        );
+        const textRecordsFromJsonCopyWithoutLoremIpsum = [
+          ...textRecordsFromJson,
+        ];
+        textRecordsFromJsonCopyWithoutLoremIpsum.pop();
+
+        const areThereAnyNotDisplayedValues =
+          textRecordsFromJsonCopyWithoutLoremIpsum.find(
+            (textRecord) => textRecord.isDisplayed === false
+          );
 
         if (!areThereAnyNotDisplayedValues) {
           break;
         }
 
         while (!textToAppend) {
-          const randomIndex = this.generateRandomIndexFromRange();
+          const randomIndex = generateRandomIndexOfArrayIndexes(
+            textRecordsFromJsonCopyWithoutLoremIpsum.length
+          );
 
           textToAppend = this.getTextFromJsonToAppendAndSetItsFlag(
             textRecordsFromJson,
@@ -194,15 +220,11 @@ export class BlocksService {
         throw Error('invalid option');
     }
 
+    this.saveTextRecordsToLocalStorage();
+
     if (textToAppend === null) {
       this.htmlDialogElement?.showModal();
     }
-
-    textToAppend
-      ? this.outputText$$.next(
-          this.outputText$$.value.concat(textToAppend).sort(sortingMethod)
-        )
-      : this.outputText$$.next(this.outputText$$.value.sort(sortingMethod));
   }
 
   private emitReplacementOutputText(
@@ -236,7 +258,9 @@ export class BlocksService {
         }));
 
         do {
-          const randomIndex = this.generateRandomIndexFromRange();
+          const randomIndex = generateRandomIndexOfArrayIndexes(
+            textRecordsFromJson.length
+          );
 
           if (randomIndex !== this.lastUsedTextIndexForReplacement) {
             replacementText = this.getTextForReplacementFromJsonAndSetFlags(
@@ -255,9 +279,7 @@ export class BlocksService {
       (textRecord) => textRecord.value === replacementText
     );
 
-    replacementText
-      ? this.outputText$$.next([replacementText])
-      : this.outputText$$.next(this.outputText$$.value);
+    this.saveTextRecordsToLocalStorage();
   }
 
   private getTextFromJsonToAppendAndSetItsFlag(
@@ -270,7 +292,7 @@ export class BlocksService {
       text = textRecordsFromJson[index].value;
 
       textRecordsFromJson[index].isDisplayed = true;
-      this.textRecordsFromJson$$.next(textRecordsFromJson);
+      this.textRecords$$.next(textRecordsFromJson);
     }
 
     return text;
@@ -290,33 +312,68 @@ export class BlocksService {
     }));
     textRecordsFromJson[index].isDisplayed = true;
 
-    this.textRecordsFromJson$$.next(textRecordsFromJson);
+    this.textRecords$$.next(textRecordsFromJson);
 
     return text;
   }
 
-  private getStringsFromJsonFile() {
-    return this.http
-      .get<Record<string, TextRecord[]>>('./../../../assets/data.json')
-      .pipe(
-        map((data) => data['data']),
-        tap((stringsFromJson) => {
-          this.textRecordsFromJson$$.next(stringsFromJson);
-        })
-      );
-  }
+  private emitTextRecordsFromStorageOrFile(): void {
+    const textRecordsFromStorage = this.getTextRecordsFromLocalStorage();
 
-  private setAllTextsFromJsonAsNotDisplayed(): void {
-    if (this.textRecordsFromJson$$.value) {
-      const modifiedTextRecordsFromJson = this.textRecordsFromJson$$.value.map(
-        (textRecords) => ({ ...textRecords, isDisplayed: false })
-      );
-
-      this.textRecordsFromJson$$.next(modifiedTextRecordsFromJson);
+    if (textRecordsFromStorage) {
+      this.textRecords$$.next(textRecordsFromStorage);
+    } else {
+      this.getTextRecordsFromJsonFile()
+        .pipe(
+          tap((textRecords) => this.textRecords$$.next(textRecords)),
+          takeUntilDestroyed()
+        )
+        .subscribe();
     }
   }
 
-  private generateRandomIndexFromRange(): number {
-    return Math.floor(Math.random() * this.TEXT_RECORDS_FROM_JSON_LENGTH);
+  private getTextRecordsFromLocalStorage() {
+    const textRecordsAsString = localStorage.getItem(
+      this.TEXT_RECORDS_STORAGE_KEY
+    );
+
+    if (textRecordsAsString) {
+      let textRecords = JSON.parse(textRecordsAsString) as TextRecord[];
+
+      return this.isTextRecordArray(textRecords) ? textRecords : null;
+    }
+
+    return null;
+  }
+
+  isTextRecordArray(data: Record<string, any>[]): data is TextRecord[] {
+    return !!data.length && 'value' in data[0] && 'isDisplayed' in data[0];
+  }
+
+  private getTextRecordsFromJsonFile() {
+    return this.http
+      .get<Record<string, TextRecord[]>>('./../../../assets/data.json')
+      .pipe(map((data) => data['data']));
+  }
+
+  saveTextRecordsToLocalStorage() {
+    const textRecordsFromJson = this.textRecords$$.value;
+
+    if (textRecordsFromJson) {
+      localStorage.setItem(
+        this.TEXT_RECORDS_STORAGE_KEY,
+        JSON.stringify(textRecordsFromJson)
+      );
+    }
+  }
+
+  private setAllTextRecordsAsNotDisplayed(): void {
+    if (this.textRecords$$.value) {
+      const modifiedTextRecordsFromJson = this.textRecords$$.value.map(
+        (textRecords) => ({ ...textRecords, isDisplayed: false })
+      );
+
+      this.textRecords$$.next(modifiedTextRecordsFromJson);
+    }
   }
 }
