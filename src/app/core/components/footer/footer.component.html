@@ -12,50 +12,16 @@
       (click)="onDisplayMenuClick()"
     >
       <span>Pokaż</span>
-      <ng-container>
-        @if(!isMenuDisplayed) {
-        <i
-          class="button footer__navigation__button__icon fa-solid fa-chevron-up"
-        ></i>
-        } @else {
-        <i
-          class="button footer__navigation__button__icon fa-solid fa-chevron-down"
-        ></i>
-        }</ng-container
-      >
+      @if(!isMenuDisplayed) {
+      <i
+        class="button footer__navigation__button__icon fa-solid fa-chevron-up"
+      ></i>
+      } @else {
+      <i
+        class="button footer__navigation__button__icon fa-solid fa-chevron-down"
+      ></i>
+      }
     </button>
-    <div
-      class="footer__navigation__menu"
-      [ngClass]="{ 'menu-displayed': isMenuDisplayed }"
-    >
-      <ul class="footer__navigation__menu__list">
-        <li
-          class="footer__navigation__menu__list__item"
-          (click)="onResetSettingsClick()"
-        >
-          <a href="#" class="footer__navigation__menu__list__item__button">
-            <i
-              class="footer__navigation__menu__list__item__button__icon fa-solid fa-chevron-right"
-            ></i>
-            <p class="footer__navigation__menu__list__item__button__text">
-              zresetuj ustawienia
-            </p>
-          </a>
-        </li>
-        <li
-          class="footer__navigation__menu__list__item"
-          (click)="onShowPersonalDataClick()"
-        >
-          <a href="#" class="footer__navigation__menu__list__item__button"
-            ><i
-              class="footer__navigation__menu__list__item__button__icon fa-solid fa-chevron-right"
-            ></i>
-            <p class="footer__navigation__menu__list__item__button__text">
-              pokaż dane osobowe
-            </p></a
-          >
-        </li>
-      </ul>
-    </div>
+    <app-menu [isMenuDisplayed]="isMenuDisplayed"></app-menu>
   </div>
 </footer>

@@ -1,0 +1,62 @@
+@import "variables.scss";
+
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  background: $dirty-white;
+  color: $black;
+  text-align: center;
+  transition: top 0.5s ease;
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0.7rem 0;
+    flex-direction: column;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 0.2rem 1rem;
+
+      &__button {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        cursor: pointer;
+        text-decoration: none;
+
+        &__icon {
+          font-size: 0.8rem;
+        }
+
+        &__text {
+          margin-left: 0.2rem;
+          font-size: 0.8rem;
+          text-transform: uppercase;
+
+          color: $black;
+        }
+
+        &:focus-visible {
+          outline: max(3px, 0.15rem) solid currentColor;
+          outline-offset: max(3px, 0.15rem);
+        }
+
+        &:hover > &__text,
+        &:hover > &__icon {
+          color: $orange;
+        }
+      }
+    }
+  }
+}
+
+.menu-displayed {
+  top: -6.6rem;
+  z-index: 999999;
+}

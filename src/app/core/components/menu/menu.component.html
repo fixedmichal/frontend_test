@@ -1,0 +1,18 @@
+<div class="menu" [ngClass]="{ 'menu-displayed': isMenuDisplayed }">
+  <ul class="menu__list">
+    <li class="menu__list__item" (click)="onResetSettingsClick()">
+      <a href="#" class="menu__list__item__button">
+        <i class="menu__list__item__button__icon fa-solid fa-chevron-right"></i>
+        <p class="menu__list__item__button__text">zresetuj ustawienia</p>
+      </a>
+    </li>
+    <li class="menu__list__item" (click)="onShowPersonalDataClick()">
+      <a href="#" class="menu__list__item__button"
+        ><i
+          class="menu__list__item__button__icon fa-solid fa-chevron-right"
+        ></i>
+        <p class="menu__list__item__button__text">pokaż dane osobowe</p></a
+      >
+    </li>
+  </ul>
+</div>
