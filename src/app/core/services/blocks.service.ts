@@ -18,6 +18,7 @@ import { loremIpsumText } from '../constants/lorem-ipsum-text.constants';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   generateRandomIndexOfArrayIndexes,
+  isTextRecordArray,
   sortingStringsMethod,
 } from '../utils/utils';
 
@@ -108,7 +109,17 @@ export class BlocksService {
     this.isPersonalDataDisplayed$$.next(true);
   }
 
-  resetTextRecordsToDefault(): void {
+  resetSettingsToDefault(): void {
+    this.isPersonalDataDisplayed$$.next(false);
+    this.resetTextRecordsToDefault();
+    this.resetRadioButtons$$.next();
+  }
+
+  setDialogReference(dialog: HTMLDialogElement): void {
+    this.htmlDialogElement = dialog;
+  }
+
+  private resetTextRecordsToDefault(): void {
     let textRecords = this.textRecords$$?.value?.map((textRecord) => {
       if (textRecord.value === loremIpsumText) {
         return { ...textRecord, isDisplayed: true };
@@ -120,17 +131,6 @@ export class BlocksService {
     if (textRecords) {
       this.textRecords$$.next(textRecords);
     }
-  }
-
-  resetSettingsToDefault(): void {
-    this.setAllTextRecordsAsNotDisplayed();
-    this.isPersonalDataDisplayed$$.next(false);
-    this.resetTextRecordsToDefault();
-    this.resetRadioButtons$$.next();
-  }
-
-  setDialogReference(dialog: HTMLDialogElement): void {
-    this.htmlDialogElement = dialog;
   }
 
   private setupAppendTextStream$() {
@@ -340,14 +340,10 @@ export class BlocksService {
     if (textRecordsAsString) {
       let textRecords = JSON.parse(textRecordsAsString) as TextRecord[];
 
-      return this.isTextRecordArray(textRecords) ? textRecords : null;
+      return isTextRecordArray(textRecords) ? textRecords : null;
     }
 
     return null;
-  }
-
-  isTextRecordArray(data: Record<string, any>[]): data is TextRecord[] {
-    return !!data.length && 'value' in data[0] && 'isDisplayed' in data[0];
   }
 
   private getTextRecordsFromJsonFile() {
@@ -356,7 +352,7 @@ export class BlocksService {
       .pipe(map((data) => data['data']));
   }
 
-  saveTextRecordsToLocalStorage() {
+  private saveTextRecordsToLocalStorage() {
     const textRecordsFromJson = this.textRecords$$.value;
 
     if (textRecordsFromJson) {
@@ -364,16 +360,6 @@ export class BlocksService {
         this.TEXT_RECORDS_STORAGE_KEY,
         JSON.stringify(textRecordsFromJson)
       );
-    }
-  }
-
-  private setAllTextRecordsAsNotDisplayed(): void {
-    if (this.textRecords$$.value) {
-      const modifiedTextRecordsFromJson = this.textRecords$$.value.map(
-        (textRecords) => ({ ...textRecords, isDisplayed: false })
-      );
-
-      this.textRecords$$.next(modifiedTextRecordsFromJson);
     }
   }
 }
